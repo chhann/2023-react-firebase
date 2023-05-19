@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 // 파이어베이스 초기화면에서 들고온 auth
 import { auth } from '../database/firebase';
 
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 
 
 export default function LoginForm() {
@@ -43,6 +43,35 @@ export default function LoginForm() {
 
     }
 
+    // 이메일 로그인 메소드
+    const onClickLogin = () => {
+        // async와 await 를 이용하여 파이어베이스메소드 사용
+        // 비동기함수로 만들기
+        async function getLogin() {
+            // 오류가 날 가능성이 있는 모든 코드를 try에 작성
+            try{
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                console.log(user);
+                setUser(
+                    {
+                        uid: user.uid,
+                        email : user.email,
+                        displayName : user.displayName,
+                    }
+                )      
+
+            }
+            // 오류가 났을때 실행할 코드
+            // 오류가 나면 화면이 멈추는 것이 아니라 
+            // catch를 실행하고 다른 아래쪽의 코드를 실행 
+            catch(error) {
+                console.log(error.code, error.message)
+            }
+        }
+        getLogin();
+    }
+
     return (
         <div>
             <h3>로그인 폼입니다</h3>
@@ -60,6 +89,7 @@ export default function LoginForm() {
                 />
                 <br />
                 <input type="submit" value="회원가입" />
+                <button type='button' onClick={ onClickLogin }>로그인</button>
             </form>
             <h3>{user ? user.email : "로그인되지않았습니다"}</h3>
         </div>

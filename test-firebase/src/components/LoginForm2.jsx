@@ -1,19 +1,16 @@
-import React, { useState } from 'react'
-// 파이어베이스 초기화면에서 들고온 auth
-import { auth } from '../database/firebase';
+import React, {useState} from 'react'
+import './formcss.css'
 
+import  { auth } from '../database/firebase2'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { Link, useNavigate } from 'react-router-dom';
+export default function LoginForm2() {
 
-
-export default function LoginForm() {
-    // input 태그에 있는 값을 가져오는 state
-    const [email, setEmail] =useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
-    // react가 실행되는 동안에 저장될 use데이터 
-    // accessToken은 세션이나 브라우저에 저장해서 로그인확인
-    // {email, displayname}
+    
     const [user, setUser] = useState(null);
+    const navigate = useNavigate();
 
     // 이메일 회원가입 메소드
     const onEmailLogin = (e) => {
@@ -66,7 +63,8 @@ export default function LoginForm() {
                         email : user.email,
                         displayName : user.displayName,
                     }
-                )      
+                )
+                navigate('/MAIN')
 
             }
             // 오류가 났을때 실행할 코드
@@ -80,11 +78,12 @@ export default function LoginForm() {
             }
         }
         getLogin();
+        navigate('/HOME')
     }
 
     return (
         <div>
-            <h3>로그인 폼입니다</h3>
+            <h1>로그인 또는 회원가입페이지 입니다</h1>
             <form onSubmit={onEmailLogin}>
                 <label htmlFor="">이메일</label>
                 <input type="email"required
@@ -98,10 +97,10 @@ export default function LoginForm() {
                     value={password}
                 />
                 <br />
-                <input type="submit" value="회원가입" />
-                <button type='button' onClick={ onClickLogin }>로그인</button>
+                <br />
+                <input type="submit" value="회원가입" className='gaip'/>
+                <button type='button' onClick={ onClickLogin } className='login'>로그인</button>
             </form>
-            <h3>{user ? user.email : "로그인되지않았습니다"}</h3>
         </div>
     )
 }
